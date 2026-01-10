@@ -1,10 +1,11 @@
 name: cf DDNS Auto Update
 
 on:
-  #schedule:
-    #- cron: '*/10 * * * *' # 每10分钟运行一次
-  workflow_dispatch: # 允许手动触发
-
+  schedule:
+    - cron: '45 */1 * * *' 
+  workflow_dispatch: 
+  #repository_dispatch: #允许外部触发,cf worker定时任务延迟在1分钟以内
+  #  types: [dnscron]
 jobs:
   update-ip:
     runs-on: ubuntu-latest
