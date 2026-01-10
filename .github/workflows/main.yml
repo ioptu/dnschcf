@@ -1,0 +1,32 @@
+name: cf DDNS Auto Update
+
+on:
+  #schedule:
+    #- cron: '*/10 * * * *' # 每10分钟运行一次
+  workflow_dispatch: # 允许手动触发
+
+jobs:
+  update-ip:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+
+      - name: Install dependencies
+        run: |
+          npm install playwright axios
+          npx playwright install chromium --with-deps
+
+      - name: Run Update Script
+        env:
+          CF_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
+          CF_ZONE_ID: ${{ secrets.CF_ZONE_ID }}
+          ISP: ${{ secrets.ISP }}
+          RECORD_NAME: ${{ secrets.RECORD_NAME }}
+          TARGET_URL: ${{ secrets.TARGET_URL }}
+        run: node ud.js
