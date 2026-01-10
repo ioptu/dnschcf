@@ -30,4 +30,4 @@ jobs:
           ISP: ${{ secrets.ISP }}
           RECORD_NAME: ${{ secrets.RECORD_NAME }}
           TARGET_URL: ${{ secrets.TARGET_URL }}
-        run: node ud.js
+        run: node ud104162.js
