@@ -31,3 +31,14 @@ jobs:
           RECORD_NAME: ${{ secrets.RECORD_NAME }}
           TARGET_URL: ${{ secrets.TARGET_URL }}
         run: node ud104162.js
+
+        
+  keepalive-workflow:
+    name: Keepalive Workflow
+    # 确保 Workflow 始终处于活跃状态，不会被 GitHub 自动停掉
+    if: always()
+    runs-on: ubuntu-latest
+    permissions:
+      actions: write
+    steps:
+      - uses: liskin/gh-workflow-keepalive@v1
