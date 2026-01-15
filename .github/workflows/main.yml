@@ -2,7 +2,7 @@ name: cf DDNS Auto Update
 
 on:
   schedule:
-    - cron: '45 */1 * * *' 
+    - cron: '45 */1 * * *'
   workflow_dispatch: 
   repository_dispatch: #允许外部触发,cf worker定时任务延迟在1分钟以内
     types: [dnscron]
@@ -23,14 +23,24 @@ jobs:
           npm install playwright axios
           npx playwright install chromium --with-deps
 
-      - name: Run Update Script
+      - name: 💻 Run Update Script
+        # 使用 retry 插件实现循环逻辑
+        uses: nick-fields/retry@v3
+        with:
+          # 单次脚本最大执行时间
+          timeout_minutes: 5
+          # 包含首次运行在内的最大尝试次数
+          max_attempts: 3
+          # 失败后等待的时间 秒
+          retry_wait_seconds: 20
+          # 要执行的命令
+          command: node ud104162.js
         env:
           CF_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
           CF_ZONE_ID: ${{ secrets.CF_ZONE_ID }}
           ISP: ${{ secrets.ISP }}
           RECORD_NAME: ${{ secrets.RECORD_NAME }}
           TARGET_URL: ${{ secrets.TARGET_URL }}
-        run: node ud104162.js
 
         
   keepalive-workflow:
